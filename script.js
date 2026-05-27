@@ -1,4 +1,5 @@
 import { existsSync, mkdirSync } from 'fs';
+import {readFolder} from './read_folder.js'
 
 class genFolderSystem {
     defaultFolderName = "System";
@@ -11,8 +12,12 @@ class genFolderSystem {
         }
     }
 
-    genFolder({ folderName = "File", path = null }) {
-        const finalPath = path || `./${this.defaultFolderName}/${folderName}`
+    genFolder({ folderName = "File", path = "" }) {
+        let finalPath = path || `./${this.defaultFolderName}/${folderName}`
+
+        if (folderName !== "File" && finalPath !== `./${this.defaultFolderName}/${folderName}`){
+           finalPath = path+`/${folderName}`
+        }
 
         try {
             if (!existsSync(finalPath)) {
@@ -31,4 +36,7 @@ class genFolderSystem {
     }
 }
 
-
+const gen = new genFolderSystem()
+const reading = new readFolder()
+const folderData = reading.ReadFolder()
+reading.cascadeReadingFolder(folderData).then(data => console.log(JSON.stringify(data, null, 2)))
